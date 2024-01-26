@@ -1,33 +1,27 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <!-- 文書の文字コードとビューポートの設定 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Bulma CSSフレームワークのリンク -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <!-- ページタイトル -->
   <title>天気アプリ</title>
 </head>
 <body>
   <section class="section">
     <div class="container">
-      <!-- ページタイトル -->
       <h1 class="title">天気アプリ</h1>
 
       <!-- フォーム -->
       <div class="field">
-        <!-- ラベルと入力フィールド -->
-        <label class="label">住所を入力してください：</label>
+        <label class="label">住所を入力してください:</label>
         <div class="control">
-          <input class="input" type="text" id="addressInput" placeholder="例えば東京都新宿区西新宿2-8-1と入力してください">
+          <input class="input" type="text" id="addressInput" placeholder="住所を入力">
         </div>
       </div>
 
-      <!-- ボタン -->
       <div class="field">
         <div class="control">
-          <button class="button is-primary" onclick="getWeather()">天気を取得する</button>
+          <button class="button is-primary" onclick="getWeather()">天気を取得</button>
         </div>
       </div>
 
@@ -36,24 +30,29 @@
     </div>
   </section>
 
-  <!-- Geolonia Community Geocoderのスクリプト -->
   <script src="https://cdn.geolonia.com/community-geocoder.js"></script>
   <script>
-    // 天気情報を取得する関数
     function getWeather() {
-      // 入力された住所を取得
       const address = document.getElementById('addressInput').value;
 
       // 住所から緯度経度を取得
       getLatLng(address, 
-        // 成功時の処理
         (latlng) => {
-          const { pref, city, town, addr, lat, lng } = latlng;
+          const { pref, city, town, addr, lat, lng, level } = latlng;
 
-          // 緯度経度を使って天気情報を取得するエンドポイント
+          // 正規化のレベルに応じて住所を構築
+          let constructedAddress = '';
+          if (level >= 3) {
+            constructedAddress += town;
+          } else if (level === 2) {
+            constructedAddress += city;
+          } else if (level === 1) {
+            constructedAddress += pref;
+          }
+
+          // 緯度経度を使って天気情報を取得
           const openMeteoEndpoint = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=temperature_2m_max,temperature_2m_min`;
 
-          // 天気情報の取得
           fetch(openMeteoEndpoint)
             .then(response => response.json())
             .then(weatherData => {
@@ -63,22 +62,25 @@
 
               const resultElement = document.getElementById('weatherResult');
               resultElement.innerHTML = `
-                <p>場所：${addr}、${town}、${city}、${pref}</p>
-                <p>最高気温：${temperatureMax}°C</p>
-                <p>最低気温：${temperatureMin}°C</p>
+                <p>場所: ${constructedAddress}</p>
+                <p>最高気温: ${temperatureMax}°C</p>
+                <p>最低気温: ${temperatureMin}°C</p>
               `;
               resultElement.classList.remove('is-hidden');
             })
             .catch(error => {
-              console.error("天気データの取得中にエラーが発生しました：", error);
+              console.error("天気情報の取得中にエラーが発生しました:", error);
             });
         },
-        // エラー時の処理
         (error) => {
-          console.error("緯度経度の取得中にエラーが発生しました：", error);
+          console.error("緯度経度の取得中にエラーが発生しました:", error);
         }
       );
     }
+  </script>
+</body>
+</html>
+
   </script>
 </body>
 </html>
