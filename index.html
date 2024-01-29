@@ -85,7 +85,6 @@
             }
         }
 
-        /* 風速に応じたスタイル */
         #current-weather.windy {
             animation: pulse 1s ease infinite; /* 風速が3 m/s以上の場合にアニメーションを適用 */
         }
@@ -104,6 +103,7 @@
             background-color: #a0c4ff;
         }
 
+        /* 風速に応じたスタイル */
         .windy {
             color: #f67280;
         }
@@ -129,7 +129,6 @@
             margin-top: 20px;
         }
 
-        /* フッター */
         footer {
             position: fixed;
             bottom: 0;
@@ -160,7 +159,6 @@
     <div class="memo">
         <p>メモ: ユーザーの位置情報を使用して、現在の天気情報を取得しています。</p>
     </div>
-
     <!-- フッター -->
     <footer>
         <p>フォントはGoogle FontsからRobotoを使用しています。</p>
@@ -168,8 +166,6 @@
         <p>天気情報の提供: Open-Meteo (<a href="https://open-meteo.com/" target="_blank">https://open-meteo.com/</a>)</p>
         <p>Created by kujira using ChatGPT</p>
     </footer>
-
-    <!-- JavaScript -->
     <script>
         // ユーザーの現在の位置情報を取得する関数
         function getLocation() {
@@ -218,6 +214,11 @@
                     } else {
                         currentWeather.classList.add('calm');
                     }
+
+                    // 風速が3 m/s以上の場合には、アニメーションクラスを追加
+                    if (windSpeed >= 3) {
+                        currentWeather.classList.add('windy');
+                    }
                 })
                 .catch(error => {
                     console.error('天気情報の取得中にエラーが発生しました:', error);
@@ -227,6 +228,3 @@
 </body>
 </html>
 
-  </script>
-</body>
-</html>
