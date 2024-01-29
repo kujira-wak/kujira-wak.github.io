@@ -1,86 +1,210 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <title>天気アプリ</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>現在地の天気情報</title>
+    <style>
+        /* CSS スタイル */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            transition: background-color 0.5s, color 0.5s;
+            /* グラデーションの背景 */
+            background: linear-gradient(-45deg, #ffcc00, #ff00ff, #33ccff, #00ffcc);
+            background-size: 400% 400%;
+            animation: gradientChange 10s ease infinite; /* グラデーションのアニメーション */
+            padding: 0;
+            margin: 0;
+        }
+
+        h1 {
+            margin-top: 50px;
+            /* フェードインアニメーション */
+            animation: fadeIn 1s ease forwards;
+        }
+
+        #current-weather {
+            font-size: 24px;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            transition: background-color 0.5s, color 0.5s;
+            animation: slideIn 1s ease forwards;
+        }
+
+        /* スライドインアニメーション */
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* フェードインアニメーション */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* グラデーションのアニメーション */
+        @keyframes gradientChange {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* 気温に応じたスタイル */
+        .hot {
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .mild {
+            background-color: #ffd166;
+        }
+
+        .cool {
+            background-color: #a0c4ff;
+        }
+
+        /* 風速に応じたスタイル */
+        .windy {
+            color: #f67280;
+        }
+
+        .breezy {
+            color: #ff9f1c;
+        }
+
+        .calm {
+            color: #6c5b7b;
+        }
+
+        /* 天気情報の説明 */
+        .weather-description {
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        /* メモのスタイル */
+        .memo {
+            font-size: 14px;
+            color: #888;
+            margin-top: 20px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f4f4f4; /* クレジットの背景色 */
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            color: #888; /* クレジットの文字色 */
+        }
+    </style>
 </head>
 <body>
-  <section class="section">
-    <div class="container">
-      <h1 class="title">天気アプリ</h1>
-
-      <!-- フォーム -->
-      <div class="field">
-        <label class="label">住所を入力してください:</label>
-        <div class="control">
-          <input class="input" type="text" id="addressInput" placeholder="住所を入力　例：東京都新宿区西新宿2-8-1">
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="control">
-          <button class="button is-primary" onclick="getWeather()">天気を取得</button>
-        </div>
-      </div>
-
-      <!-- 結果表示エリア -->
-      <div id="weatherResult" class="notification is-hidden"></div>
+    <!-- ページのタイトル -->
+    <h1>現在地の天気情報</h1>
+    <!-- 天気情報が表示される部分 -->
+    <div id="current-weather"></div>
+    <!-- アニメーションと文字色の変化に関する説明 -->
+    <div class="weather-description">
+        <p>天気情報は、気温と風速に応じて異なるスタイルで表示されます。</p>
+        <p>気温が25°C以上の場合は赤く、15°C以上の場合は黄色く、15°C未満の場合は青色く表示されます。</p>
+        <p>風速が6 m/s以上の場合は赤色の文字色、3 m/s以上の場合はオレンジ色の文字色で表示されます。</p>
+        <p>また、風速が3 m/s以上の場合には、天気情報が軽く脈打つアニメーションが付加されます。</p>
     </div>
-  </section>
 
-  <script src="https://cdn.geolonia.com/community-geocoder.js"></script>
-  <script>
-    function getWeather() {
-      const address = document.getElementById('addressInput').value;
-
-      // 住所から緯度経度を取得
-      getLatLng(address, 
-        (latlng) => {
-          const { pref, city, town, addr, lat, lng, level } = latlng;
-
-          // 正規化のレベルに応じて住所を構築
-          let constructedAddress = '';
-          if (level >= 3) {
-            constructedAddress += town;
-          } else if (level === 2) {
-            constructedAddress += city;
-          } else if (level === 1) {
-            constructedAddress += pref;
-          }
-
-          // 緯度経度を使って天気情報を取得
-          const openMeteoEndpoint = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=temperature_2m_max,temperature_2m_min`;
-
-          fetch(openMeteoEndpoint)
-            .then(response => response.json())
-            .then(weatherData => {
-              // 取得した天気情報を表示
-              const temperatureMax = weatherData.daily.temperature_2m_max[0];
-              const temperatureMin = weatherData.daily.temperature_2m_min[0];
-
-              const resultElement = document.getElementById('weatherResult');
-              resultElement.innerHTML = `
-                <p>場所: ${constructedAddress}</p>
-                <p>最高気温: ${temperatureMax}°C</p>
-                <p>最低気温: ${temperatureMin}°C</p>
-              `;
-              resultElement.classList.remove('is-hidden');
-            })
-            .catch(error => {
-              console.error("天気情報の取得中にエラーが発生しました:", error);
-            });
-        },
-        (error) => {
-          console.error("緯度経度の取得中にエラーが発生しました:", error);
+    <!-- メモ -->
+    <div class="memo">
+        <p>メモ: ユーザーの位置情報を使用して、現在の天気情報を取得しています。</p>
+    </div>
+    <!-- フッター -->
+    <footer>
+        <p>フォントはGoogle FontsからRobotoを使用しています。</p>
+        <p>このサイトの天気情報は、Open-Meteo APIを利用しています。</p>
+        <p>天気情報の提供: Open-Meteo (<a href="https://open-meteo.com/" target="_blank">https://open-meteo.com/</a>)</p>
+        <p>Created by kujira using ChatGPT</p>
+    </footer>
+    <script>
+        // ユーザーの現在の位置情報を取得する関数
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    fetchWeatherData(latitude, longitude); // 位置情報を渡して天気情報を取得
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
         }
-      );
-    }
-  </script>
+
+        // ページが読み込まれたときに位置情報を取得
+        document.addEventListener('DOMContentLoaded', function () {
+            getLocation(); // getLocation を呼び出して位置情報を取得する
+        });
+
+        // 天気情報を取得する関数
+        function fetchWeatherData(latitude, longitude) {
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,wind_speed_10m`)
+                .then(response => response.json())
+                .then(data => {
+                    const currentWeather = document.getElementById('current-weather');
+                    const temperature = data.current.temperature_2m;
+                    const windSpeed = data.current.wind_speed_10m;
+
+                    // 天気情報を表示
+                    currentWeather.innerHTML = `現在の気温: ${temperature}°C、風速: ${windSpeed} m/s`;
+
+                    // 気温に応じたスタイルを適用
+                    if (temperature >= 25) {
+                        currentWeather.classList.add('hot');
+                    } else if (temperature >= 15) {
+                        currentWeather.classList.add('mild');
+                    } else {
+                        currentWeather.classList.add('cool');
+                    }
+
+                    // 風速に応じたスタイルを適用
+                    if (windSpeed >= 6) {
+                        currentWeather.classList.add('windy');
+                    } else if (windSpeed >= 3) {
+                        currentWeather.classList.add('breezy');
+                    } else {
+                        currentWeather.classList.add('calm');
+                    }
+                })
+                .catch(error => {
+                    console.error('天気情報の取得中にエラーが発生しました:', error);
+                });
+        }
+    </script>
 </body>
 </html>
-
   </script>
 </body>
 </html>
