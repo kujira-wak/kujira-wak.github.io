@@ -72,16 +72,15 @@
             }
         }
 
-        /* 風速が3 m/s以上の場合のアニメーション */
         @keyframes pulse {
             0% {
                 transform: scale(1);
             }
             50% {
-                transform: scale(1.05);
+                transform: scale(1.1); /* 中間地点での拡大 */
             }
             100% {
-                transform: scale(1);
+                transform: scale(calc(1 + (var(--wind-speed) / 10))); /* 風速に応じて動的に変化 */
             }
         }
 
@@ -152,7 +151,7 @@
         <p>天気情報は、気温と風速に応じて異なるスタイルで表示されます。</p>
         <p>気温が25°C以上の場合は赤く、15°C以上の場合は黄色く、15°C未満の場合は青色く表示されます。</p>
         <p>風速が6 m/s以上の場合は赤色の文字色、3 m/s以上の場合はオレンジ色の文字色で表示されます。</p>
-        <p>また、風速が3 m/s以上の場合には、天気情報が軽く脈打つアニメーションが付加されます。</p>
+        <p>また、風速が3 m/s以上の場合には、天気情報が風の強さに応じて揺れるアニメーションが付加されます。</p>
     </div>
 
     <!-- メモ -->
@@ -215,10 +214,8 @@
                         currentWeather.classList.add('calm');
                     }
 
-                    // 風速が3 m/s以上の場合には、アニメーションクラスを追加
-                    if (windSpeed >= 3) {
-                        currentWeather.classList.add('windy');
-                    }
+                    // 風速をCSSカスタムプロパティにセット
+                    currentWeather.style.setProperty('--wind-speed', windSpeed);
                 })
                 .catch(error => {
                     console.error('天気情報の取得中にエラーが発生しました:', error);
@@ -227,4 +224,3 @@
     </script>
 </body>
 </html>
-
