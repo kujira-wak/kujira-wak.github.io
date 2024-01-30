@@ -35,6 +35,10 @@
             display: inline-block;
             transition: background-color 0.5s, color 0.5s;
             animation: slideIn 1s ease forwards;
+            /* 天気情報のテキストの幅に合わせてフォントサイズを自動調整 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* スライドインアニメーション */
@@ -247,4 +251,3 @@
     </script>
 </body>
 </html>
-
