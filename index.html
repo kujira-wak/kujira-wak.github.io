@@ -141,14 +141,23 @@
             color: #888; /* クレジットの文字色 */
         }
 
-        /* スマートフォン用のスタイル */
-        @media only screen and (max-width: 600px) {
-            /* ここにスマートフォン用のスタイルを定義 */
+        /* スマートフォン向けのスタイル */
+        @media screen and (max-width: 767px) {
+            /* ここにスマートフォン向けのスタイルを記述 */
             body {
-                font-size: 18px;
+                font-size: 16px;
             }
             h1 {
                 font-size: 24px;
+            }
+            .weather-description p {
+                font-size: 14px;
+            }
+            .memo p {
+                font-size: 12px;
+            }
+            footer {
+                font-size: 10px;
             }
         }
     </style>
