@@ -72,6 +72,23 @@
             }
         }
 
+        /* 風速が3 m/s以上の場合のアニメーション */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #current-weather.windy {
+            animation: pulse 1s ease infinite; /* 風速が3 m/s以上の場合にアニメーションを適用 */
+        }
+
         /* 気温に応じたスタイル */
         .hot {
             background-color: #ff6b6b;
@@ -135,7 +152,7 @@
         <p>天気情報は、気温と風速に応じて異なるスタイルで表示されます。</p>
         <p>気温が25°C以上の場合は赤く、15°C以上の場合は黄色く、15°C未満の場合は青色く表示されます。</p>
         <p>風速が6 m/s以上の場合は赤色の文字色、3 m/s以上の場合はオレンジ色の文字色で表示されます。</p>
-        <p>また、風速に応じて天気情報が揺れるアニメーションが付加されます。風速が大きいほど、揺れ幅も大きくなります。</p>
+        <p>また、風速が3 m/s以上の場合には、天気情報が軽く脈打つアニメーションが付加されます。</p>
     </div>
 
     <!-- メモ -->
@@ -192,12 +209,15 @@
                     // 風速に応じたスタイルを適用
                     if (windSpeed >= 6) {
                         currentWeather.classList.add('windy');
-                        currentWeather.style.setProperty('--wind-speed', windSpeed);
                     } else if (windSpeed >= 3) {
                         currentWeather.classList.add('breezy');
-                        currentWeather.style.setProperty('--wind-speed', windSpeed);
                     } else {
                         currentWeather.classList.add('calm');
+                    }
+
+                    // 風速が3 m/s以上の場合には、アニメーションクラスを追加
+                    if (windSpeed >= 3) {
+                        currentWeather.classList.add('windy');
                     }
                 })
                 .catch(error => {
