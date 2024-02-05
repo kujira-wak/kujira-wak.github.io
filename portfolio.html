@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kujiraのポートフォリオ|Kujira's Portfolio</title>
+  <script src="main.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+  <!--タイトル-->
+  <section class="section hero is-info is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title">
+        kujiraのポートフォリオ
+      </h1>
+      <h1 class="subtitle">
+        kujira's portfolio
+      </h1>
+    </div>
+  </section>
+  <!--作ったもの-->
+  <section class="section is-medium">
+    <div class="is-grouped-centered center">
+      <h1 class="title">
+        今まで作ったもの
+      </h1>
+    </div>
+    <div class="column">
+      <button class="button" onclick="filterSelection('all')">Show All</button>
+      <button class="button" onclick="filterSelection('Program')">Program</button>
+      <button class="button" onclick="filterSelection('img')">Img</button>
+    </div>
+    <!-- スピナーアイコン -->
+    <div id="spinner" class="has-text-centered" style="display: none;">
+      <span class="icon is-large">
+        <i class="fas fa-spinner fa-pulse"></i>
+      </span>
+    </div>
+    <!-- ポートフォリオ項目 -->
+    <div class="filterDiv Program show">
+      <h1 class="title">Program</h1>
+      <p>今の所githubにあるのは1つのだけ</p>
+      <p>つまりネットで見れるのはそれぐらい</p>
+      <p>他にあるとすれば</p>
+      <p><a href="https://scratch.mit.edu/users/kujira_wak/">scratchのアカウント</a>にあるのだけかも</p>
+      <a href="#" onclick="openModal()">作ったプログラムについて詳しく</a>
+    </div>
+    
+    <div class="filterDiv img show" onclick="openImgModal()">
+      <h1 class="title">Image</h1>
+      <div class="columns is-centered">
+        <div class="column is-half">
+          <div class="columns is-mobile is-centered">
+            <div class="column is-narrow">
+              <figure class="image is-128x128">
+                <img src="アイコン.png" alt="アイコン">
+              </figure>
+            </div>
+            <div class="column">
+              <p class="subtitle">自分のアイコン</p>
+              <p><a href="https://scratch.mit.edu/">scratch</a>をやっている時に偶然できた産物</p>
+              <p>
+                結構気に入ってる
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-half">
+          <div class="columns is-mobile is-centered">
+            <div class="column is-narrow">
+              <figure class="image is-128x128">
+                <img src="fire.gif" alt="ドット焚き火">
+              </figure>
+            </div>
+            <div class="column">
+              <p class="subtitle">自作ドット絵（焚き火）</p>
+              <p>元々<a href="https://www.google.com/sheets/about/">googleスプレッドシート</a>で作っていた物を<a href="https://scratch.mit.edu/">Piskel</a>で手直ししたもの</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- モーダル -->
+  <div class="modal" id="webModal">
+    <div class="modal-content">
+      <!-- モーダルのコンテンツ -->
+      <div class="box">
+        <h2 class="title">天気アプリ</h2>
+        <br>
+        <p>githubで公開中</p>
+        <button class="modal-close" aria-label="close" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+  <!-- 新しいモーダル -->
+  <div class="modal" id="imgModal">
+    <div class="modal-content">
+      <!-- モーダルのコンテンツ -->
+      <div class="box">
+        <h2>こちらにあるの特に記載等のないものは<a href="https://creativecommons.org/licenses/by-nc/4.0/legalcode.ja">クリエイティブ・コモンズ 表示 - 非営利 4.0 国際</a>従いライセンスを適用します</h2>
+        <br>
+        <p><a href="https://x.gd/byrjh">ダウンロードリンク</a></p>
+        <p>パスワード:f224</p>
+        <p>ここに画像ポートフォリオの詳細な説明やリンクを追加します。</p>
+        <p>
+          リンク切れてたらここへ
+        </p>
+        <p>
+          EMail:kujira.wak@gmail.com
+        </p>
+        <button class="modal-close" aria-label="close" onclick="closeImgModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
